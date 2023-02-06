@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<link rel="shortcut icon" href="#">
+
+<!--<script type='text/javascript' src="index.js"></script> -->
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz4"></div>
+
+
+<audio id="audio" src="split_1_19700101_122640_short.WAV"></audio>
+
+<script>
+
+    // set the dimensions and margins of the graph
+    var margin = { top: 100, right: 60, bottom: 60, left: 80 },
+        width = 1400 - margin.left - margin.right,
+        height = 750 - margin.top - margin.bottom;
+
+    // append the SVg object to the body of the page
+    var SVG = d3.select("#my_dataviz4")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")")
+
+    SVG.append("text")
+            .attr("x", (width / 2))
+            .attr("y", 0 - (margin.top /4))
+            .attr("text-anchor", "middle")
+            .attr("font-family", "Roboto")
+            .style("font-size", "30px")
+            .text("Interactive t-SNE: Dawn Chorus at Bosomtwe Range Forest Reserve");
+
+
+    // Add the black box around the chart
+    SVG
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("height", height)
+        .attr("width", width)
+        .style("fill", "none")
+        .style("stroke", "black")
+        .style("opacity", 0.6)
+
+
+    //Read the data
+    d3.csv("https://raw.githubusercontent.com/JoycelynLongdon/t-sne/main/10_sec_p150_cluster_coordinates_mfcc.csv", function (data) {
+        var headerRow = Object.keys(data[0]);
+        console.log(headerRow);
+        console.log(data);
+
+
+
+
+        // Add X axis
+        var x = d3.scaleLinear()
+            .domain([-14, 14])
+            .range([0, width])
+        SVG.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+
+        // Add Y axis
+        var y = d3.scaleLinear()
+            .domain([-14, 14])
+            .range([height, 0])
+            .nice()
+        SVG.append("g")
+            .call(d3.axisLeft(y))
+
+        // Add X axis label:
+        var xAxis = SVG.append("text")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", height + margin.top + 20)
+            .style("fill", "white")
+
+        // Y axis label:
+        var yAxis = SVG.append("text")
+            .attr("text-anchor", "end")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -margin.left + 20)
+            .attr("x", -margin.top)
+            .style("fill", "white")
+
+        // Add a clipPath: everything out of this area won't be drawn.
+        var clip = SVG.append("defs").append("svg:clipPath")
+            .attr("id", "clip")
+            .append("svg:rect")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("x", 0)
+            .attr("y", 0);
+
+
+        // Customization
+        SVG.selectAll(".tick line").attr("stroke", "white")
+        SVG.selectAll(".tick text").attr("stroke", "white").style("font-size", 10)
+
+        // Color scale: give me a specie name, I return a color
+        var color = d3.scaleOrdinal()
+            .domain(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
+            .range(["#5778a4", "#e49444", "#d1615d", "#85b6b2", "#6a9f58", "#e7ca60", "#a87c9f", "#f1a2a9", "#967662", "#b8b0ac"])
+
+        // TOOLTIP
+        // create a tooltip
+        var tooltip = d3.select("#my_dataviz4")
+            .append("div")
+            .style("opacity", 0)
+            .attr("class", "tooltip")
+            .style("font-size", "16px")
+            .style("position", "absolute")
+            .attr("class", "tooltip")
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "2px")
+            .style("border-radius", "5px")
+            .style("padding", "5px")
+
+        // A function that change this tooltip when the user hover a point.
+        // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+        var mouseover = function (d) {
+            tooltip
+            .transition()
+            .duration(200)
+            .style("opacity", 1)
+            d3.select(this)
+            .style("stroke", "black")
+            .style("opacity", 1)
+        }
+
+        var mousemove = function (d) {
+            tooltip
+            .html("File: " + d.filename)
+            .style("left", (d3.mouse(this)[0]-20) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("top", (d3.mouse(this)[1]) + "px")
+        }
+
+        // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+        var mouseleave = function (d) {
+            tooltip
+            .transition()
+            .duration(200)
+            .style("opacity", 0)
+            d3.select(this)
+                .style("stroke", "none")
+                .style("opacity", 0.8)
+        }
+
+        //ZOOM
+
+
+        // Add brushings
+        //var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+        //    .extent([[0, 0], [width, height]]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+        //    .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+
+        // Create the scatter variable: where both the circles and the brush take place
+        var scatter = SVG.append('g')
+            .attr("clip-path", "url(#clip)")
+        // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+        var zoom = d3.zoom()
+            .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
+            .extent([[0, 0], [width, height]])
+            .on("zoom", updateChart);
+
+        // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+        scatter.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .style("fill", "none")
+            .style("pointer-events", "all")
+        //.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .call(zoom); // now the user can zoom and it will trigger the function called updateChart
+
+        // Add circles
+        scatter
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            //.transition()
+            //.delay(function (d) { return (i * 1) })
+            //.duration(5000)
+            .attr("cx", function (d) { return x(d.tsne1); })
+            .attr("cy", function (d) { return y(d.tsne2); })
+            .attr("id", function (d) { return d.filename })
+            .attr("r", 8)
+            .style("fill", function (d) { return color(d.tsne_clusters) })
+            .style("opacity", 0.5)
+
+
+
+        /*function reset() {
+            SVG.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity,
+                d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+            );
+        }
+
+        function clicked(event, [x, y]) {
+            event.stopPropagation();
+            SVG.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity.translate(width / 2, height / 2).scale(40).translate(-x, -y),
+                d3.pointer(event)
+            );
+        }
+
+        function zoomed({ transform }) {
+            scatter.attr("transform", transform);
+        }
+
+        return Object.assign(SVG.node(), {
+            zoomIn: () => SVG.transition().call(zoom.scaleBy, 2),
+            zoomOut: () => SVG.transition().call(zoom.scaleBy, 0.5),
+            zoomReset: reset
+        });*/
+
+        var currentAudio = null;
+
+
+        d3.selectAll('circle')
+            .on('mouseover', function (d, i) {
+                console.log("audio_test", d.filename, i);
+            })
+            .on('mouseover', mouseover)
+            .on('mousemove', mousemove)
+            .on('mouseleave', mouseleave)
+            .on('click', function (d) {
+                console.log("audio_test");
+                //let circle_unique_identifier = d.filename; //assuming that's in your dataset after looking at you csv
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioContext();
+                // get the audio element
+                if (currentAudio != null && !currentAudio.paused && currentAudio != this) {
+                currentAudio.pause();
+                //Here we reset the audio and put it back to 0.
+                currentAudio.currentTime = 0;
+                }
+                let audioElement = new Audio('tsne_cropped_data/10_sec_chunked_files/' + d.filename);
+                /*if(audioElement.paused){ 
+                    audioElement.play();}else{
+                    console.log("audio_pause");
+                    audioElement.currentTime = 0;
+                    audioElement.pause();
+                    audioElement.currentTime = 0;
+                    }*/
+                    if (audioElement.paused) {
+                    audioElement.play();
+                    currentAudio = audioElement;
+                } else {
+                    audio.pause();
+                }
+                
+                /*if (audioElement.paused) {
+                    audioElement.play();
+                } else {
+                    audioElement.pause();
+                    audioElement.currentTime = 0
+                }*/
+            })
+            /*.on('click', function(d){
+            console.log("audio_pause");
+            if(audioElement!= undefined){
+                audioElement.pause();
+                audio0.currentTime = 0;}
+
+            })*/
+
+        /*function slided(d) {
+            zoom.scaleTo(SVG, d3.select(this).property("value"));
+        }
+        var slider = d3.select("body").append("p").append("input")
+            .datum({})
+            .attr("type", "range")
+            .attr("value", zoom.scaleExtent()[0])
+            .attr("min", zoom.scaleExtent()[0])
+            .attr("max", zoom.scaleExtent()[1])
+            .attr("step", (zoom.scaleExtent()[1] - zoom.scaleExtent()[0]) / 100)
+            .on("input", slided);*/
+
+        // A function that updates the chart when the user zoom and thus new boundaries are available
+        function updateChart() {
+
+            // recover the new scale
+            var newX = d3.event.transform.rescaleX(x);
+            var newY = d3.event.transform.rescaleY(y);
+
+            // update axes with these new boundaries
+            xAxis.call(d3.axisBottom(newX))
+            yAxis.call(d3.axisLeft(newY))
+
+        // update circle position
+        scatter
+            .selectAll("circle")
+            .attr('cx', function (d) { return newX(d.tsne1) })
+            .attr('cy', function (d) { return newY(d.tsne2) })
+        /*.on("click", function (d) {
+        "Filename" + d.filename;
+        });*/
+    
+
+}
+})
+
+
+    
+
+
+
+        /*d3.selectAll('circle')
+            .on('click', function (e, d) {
+            console.log("audio_test");
+        //let circle_unique_identifier = d.filename; //assuming that's in your dataset after looking at you csv
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        // get the audio element
+        const audioElement = new Audio('tsne_cropped_data/10_sec_chunked_files/' + d.filename);
+        audioElement.play();
+            })*/
+
+
+        /*.on("click", function (d) {
+            "Filename" + d.filename;
+        });*/
+        /*.on("click", function (d) {
+  console.log("test");
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+// get the audio element
+const audioElement = document.querySelector("audio");
+audioElement.play();
+  })*/
+        // .on('click', function (e, d) {
+        //     console.log("audio_test");
+        //     //let circle_unique_identifier = d.filename; //assuming that's in your dataset after looking at you csv
+        //     window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        //     const audioCtx = new AudioContext();
+        //     // get the audio element
+        //     const audioElement = new Audio('tsne_cropped_data/10_sec_chunked_files/' + d.filename);
+        //     audioElement.play();
+        // })
+
+
+        /*SVG.append("text")
+            .attr("x", w / 2)
+            .attr("y", padding)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("t-SNE Clustering of The Dawn Chorus at Bosomtwe Range Forest Reserve");*/
+
+
+
+        /*// Add the brushing
+        scatter
+            .append("g")
+            .attr("class", "brush")
+            .call(brush);
+    
+        // A function that set idleTimeOut to null
+        var idleTimeout
+        function idled() {idleTimeout = null; }
+    
+        // A function that update the chart for given boundaries
+        function updateChart() {
+    
+            extent = d3.event.selection
+     
+            // If no selection, back to initial coordinate. Otherwise, update X axis domain
+            if (!extent) {
+                if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+        x.domain([4, 8])
+            } else {
+            x.domain([x.invert(extent[0]), x.invert(extent[1])])
+                scatter.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+            }
+    
+        // Update axis and circle position
+        xAxis.transition().duration(1000).call(d3.axisBottom(x))
+        scatter
+        .selectAll("circle")
+        .transition().duration(1000)
+        .attr("cx", function (d) { return x(d.tsne1); })
+        .attr("cy", function (d) { return y(d.tsne2); })
+     
+        }*/
+
+
+
+        // Add dots
+        //SVG.append('g')
+        //   .selectAll("dot")
+        //   .data(data)
+        //  .enter()
+        //  .append("circle")
+        //  .attr("cx", function (d) { return x(d.tsne1); })
+        // .attr("cy", function (d) { return y(d.tsne2); })
+        // .attr("r", 8)
+        //  .style("fill", function (d) { return color(d.tsne_clusters) })
+        //   .style("stroke", "white")
+        //   .style("stroke-width", 1)
+        //  .on("mouseover", mouseover)
+        //  .on("mousemove", mousemove)
+
+    
+
+
+</script>
