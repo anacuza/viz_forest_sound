@@ -36,15 +36,7 @@ export default function Home() {
             >
               By
               <svg  xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56"><g data-name="Group 111" transform="translate(-10.502 -593.756)"><g data-name="Path 54"><path data-name="Path 55" d="M38.5,594.756a26.987,26.987,0,1,0,22.547,41.931,25.933,25.933,0,0,0,3.531-7.908,27.453,27.453,0,0,0,.922-7.023,26.976,26.976,0,0,0-27-27" fill="#EF9D16" stroke="#000000" stroke-miterlimit="10" stroke-width="2"></path></g><g style={{isolation: 'isolate'}}><g data-name="Group 110" style={{isolation: 'isolate'}}><path data-name="Path 56" d="M33.061,603.669a19.987,19.987,0,0,1,7.521-1.449c5.451,0,10.9,2.345,11.247,8.625a3.594,3.594,0,0,1-.553,2.345c-.9,1.173-2.138,1.243-3.38,1.864-2.07,1.035-2.691,4.209-5.382,4.209a2.523,2.523,0,0,1-2.347-2.346c0-2.14.622-3.381.966-5.451a10.214,10.214,0,0,0,.138-1.519c0-2.828-1.241-5.726-3.519-5.726a4.737,4.737,0,0,0-2.69,1.1c-3.244,2.484-3.588,6.486-3.588,10.419,0,6.555,2.966,18.285,11.454,18.285,2.07,0,3.519-.9,5.175-2.07,5.588-3.934,6.969-11.385,6.969-17.8a.919.919,0,0,1,.966.69,14.819,14.819,0,0,1,.138,3.036c0,14.144-9.936,22.011-19.942,22.149H35.89c-10.282,0-16.009-6.831-16.009-16.9C19.881,614.433,24.436,607.326,33.061,603.669Z" fill="#000000"></path></g></g></g></svg>
-              {/* {' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              /> */}
+
             </a>
           </div>
         </div>
@@ -61,67 +53,6 @@ export default function Home() {
           </svg>
           </div>
         </div>
-
-
-
-        {/* <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div> */}
       </main>
     </>
   )
