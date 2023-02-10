@@ -4,12 +4,17 @@ import styles from '@/styles/Home.module.css'
 import Link from 'next/link'
 import * as d3 from "d3";
 import {useEffect} from "react";
+import { useState } from "react";
+import { useRef } from "react";
 
 
 export default function Cluster() {
+    const [clicked, setClick] = useState(false);
+    const svgRef = useRef();
     useEffect(() => {
+        console.log(clicked)
     const height = window.innerHeight
-    const width = window.innerWidth
+    const width = clicked ? (window.innerWidth / 2) : window.innerWidth
     const n = 200 // number of nodes
     const m = 10 // number of groups
     const color = d3.scaleOrdinal(d3.range(m), d3.schemeCategory10)
@@ -138,19 +143,24 @@ export default function Cluster() {
             .force("cluster", forceCluster())
             .force("collide", forceCollide());
 
-        
+             
+        let svg = d3.select(svgRef.current);
+        //let svg = d3.select('#viz_id')
+        //.append("svg").attr('width', width).attr('height', height); // DOM.svg(width, height)''
       
-        let svg = d3.select('.svg_div')
-        .append("svg").attr('width', width).attr('height', height); // DOM.svg(width, height)''
-      
+        svg.selectAll("*").remove()
+
+        svg.attr('width', width).attr('height', height);
+
         let node = svg.append("g")
           .selectAll("circle")
           .data(nodes)
           .join("circle")
-            .attr("cx", d => {console.log(d.x); return d.x})
-            .attr("cy", d => {console.log(d.y); return d.y})
+            .attr("cx", d => {return d.x})
+            .attr("cy", d => {return d.y})
             //.attr("fill", d => {console.log(color(d.data.group)); return d.data.group})
-            .call(drag(simulation));
+            .call(drag(simulation))
+            .on("click", d => {setClick((prev) => !prev);});
       
         node.transition()
             .delay((d, i) => Math.random() * 500)
@@ -169,8 +179,7 @@ export default function Cluster() {
 
 
 
-
-    }, []);
+    }, [clicked]);
 
      return(
         <>
@@ -180,10 +189,43 @@ export default function Cluster() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
         </Head>
-        <div className="svg_div">
+        <div className={styles.main_viz}>
 
+
+        <div className={clicked ? 'viz_div half' : 'viz_div'} id="viz_id" >
+        <style jsx>{`
+        viz_div {
+          width:100%;
+        }
+        .viz_div.half {
+            width:50%;
+        }
+      `}</style>
+
+        <svg ref={svgRef}></svg>
+            {/*{clicked ? console.log("hello") : console.log("bye")} */}
         </div>
 
+        <div className={clicked ? 'form_div' : 'form_div hidden'}>
+        <style jsx>{`
+        .form_div {
+          display: block;
+          visibility: visible;
+          width:50%;
+        }
+        .form_div.hidden {
+            display: none;
+            visibility: hidden;
+        }
+      `}</style>
+      <h1> HELLO </h1>
+        </div>
+
+        {/* <div className={` ${{display: clicked == true ? "block" : "none"}} ${{visibility: clicked == true ? "visible" : "hidden"}}`} id="form_id">
+            <h1> HELLO </h1>
+            {console.log(clicked)}
+        </div> */}
+        </div>
         </>
      ) 
 

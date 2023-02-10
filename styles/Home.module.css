@@ -334,3 +334,19 @@
     transform: rotate(0deg);
   }
 }
+
+
+/* Main Viz Page CSS*/
+.main_viz{
+  display: flex;
+  flex-direction: row;
+}
+
+  .viz_div {
+
+  }
+
+  .form_div {
+    display: none;
+    visibility: hidden;
+  }
