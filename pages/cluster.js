@@ -8,14 +8,19 @@ import { useState } from "react";
 import { useRef } from "react";
 import { useMemo } from "react";
 import { useLoadScript, GoogleMap, Marker } from '@react-google-maps/api';
+import PageWithJSbasedForm from './form';
 /*import MapContainer from './MapContainer'; */
 
 
 export default function Cluster() {
 
-
     const [isMarkerShown, setMarkerShown] = useState(false);
     const [markerPosition, setMarkerPosition] = useState(null);
+    const [nodePage, setNodePage] = useState(null);
+
+    // const handleClickedNode = (i) => {
+    //     setNodePage(i)
+    // }
 
     const handleClickedMap = (e) => {
         let lat = e.latLng.lat()
@@ -60,7 +65,8 @@ export default function Cluster() {
           d3.group(
             Array.from({length: n}, (_, i) => ({
               group: Math.random() * m | 0,
-              value: -Math.log(Math.random())
+              value: -Math.log(Math.random()),
+              id: i
             })),
             d => d.group
           ),
@@ -163,6 +169,17 @@ export default function Cluster() {
   }
 
 
+  function guid() {
+    function _random_letter() {
+        return String.fromCharCode(97+Math.floor(Math.random() * 26));
+    }
+    function _p8(s) {
+        var p = (Math.random().toString(16)+"000000000").substr(2,8);
+        return s ? "-" + p.substring(0,4) + "-" + p.substring(4,4) : _random_letter() + p.substring(0, 7);
+    }
+    return _p8() + _p8(true) + _p8(true) + _p8();
+}
+
         let nodes = pack().leaves()
 
       
@@ -187,9 +204,11 @@ export default function Cluster() {
           .join("circle")
             .attr("cx", d => {return d.x})
             .attr("cy", d => {return d.y})
+            .attr("id", guid()) 
+            //.attr("id", (d,i) => {return i})
             //.attr("fill", d => {console.log(color(d.data.group)); return d.data.group})
             .call(drag(simulation))
-            .on("click", d => {setClick((prev) => !prev);});
+            .on("click", (e,d,i) => {setClick((prev) => !prev); setNodePage(d.data.id);});
       
         node.transition()
             .delay((d, i) => Math.random() * 500)
@@ -225,7 +244,7 @@ export default function Cluster() {
         <div className={styles.main_viz}>
 
 {/*RECONVERT TO CORRECT DIV CHOICES*/}
-        <div className={clicked ? 'viz_div half' : 'viz_div half'} id="viz_id" >
+        <div className={clicked ? 'viz_div half' : 'viz_div'} id="viz_id" >
         <style jsx>{`
         viz_div {
           width:100%;
@@ -239,7 +258,7 @@ export default function Cluster() {
             {/*{clicked ? console.log("hello") : console.log("bye")} */}
         </div>
 
-        <div className={clicked ? 'form_div' : 'form_div'}>
+        <div className={clicked ? 'form_div' : 'form_div hidden'}>
         <style jsx>{`
         .form_div {
           display: block;
@@ -251,10 +270,11 @@ export default function Cluster() {
             visibility: hidden;
         }
       `}</style>
-      <h1> HELLO </h1>
+      <h1> HELLO {nodePage}</h1>
+      {console.log(nodePage)}
 {/*options={mapOptions}*/}
 {/*mapTypeId={google.maps.MapTypeId.ROADMAP}*/}
-
+      <PageWithJSbasedForm/>
         {!isLoaded ?  <div>Loading...</div> :
         <GoogleMap
         zoom={14}
