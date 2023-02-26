@@ -272,13 +272,14 @@ export default function Cluster() {
       `}</style>
       <h1> HELLO {nodePage}</h1>
       {console.log(nodePage)}
-{/*options={mapOptions}*/}
+{/**/}
 {/*mapTypeId={google.maps.MapTypeId.ROADMAP}*/}
       <PageWithJSbasedForm/>
         {!isLoaded ?  <div>Loading...</div> :
         <GoogleMap
         zoom={14}
         center={mapCenter}
+        mapTypeId={"satellite"}
         mapContainerStyle={{ width: '800px', height: '800px' }}
         onLoad={() => console.log('Map Component Loaded...')}
         onClick={ handleClickedMap}
