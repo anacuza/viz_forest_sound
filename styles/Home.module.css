@@ -4,6 +4,8 @@
   font-family: "Open Sans", sans-serif;
 }
 
+
+
 .main {
   background: radial-gradient(rgba(237,146, 22, 0.6), #FFFFFF);
   display: flex;
@@ -340,6 +342,7 @@
 .main_viz{
   display: flex;
   flex-direction: row;
+  background-color:#FCFFFD;
 }
 
   .viz_div {

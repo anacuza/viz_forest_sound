@@ -6,45 +6,27 @@ import * as d3 from "d3";
 import {useEffect} from "react";
 import { useState } from "react";
 import { useRef } from "react";
-import { useMemo } from "react";
-import { useLoadScript, GoogleMap, Marker } from '@react-google-maps/api';
-import PageWithJSbasedForm from './form';
+
+
+
+import Header from '../components/header'
+import LabelPage from '../components/LabelPage'
+import CommentPage from '../components/CommentPage'
+import MapPage from '../components/MapPage'
+import RatePage from '../components/RatePage'
+import Footer from '@/components/footer';
 /*import MapContainer from './MapContainer'; */
 
 
 export default function Cluster() {
 
-    const [isMarkerShown, setMarkerShown] = useState(false);
-    const [markerPosition, setMarkerPosition] = useState(null);
+    
     const [nodePage, setNodePage] = useState(null);
-
-    // const handleClickedNode = (i) => {
-    //     setNodePage(i)
-    // }
-
-    const handleClickedMap = (e) => {
-        let lat = e.latLng.lat()
-        let lng  = e.latLng.lng()
-        console.log(lat, lng)
-        setMarkerPosition({ lat: parseFloat(lat), lng: parseFloat(lng) })
-        setMarkerShown(true)
-     }
-
-    const mapCenter = useMemo(
-        () => ({ lat: 27.672932021393862, lng: 85.31184012689732 }),
-        []
-      );
-    
-    const { isLoaded } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyBR5OPxQcPmPbwlKgcxkTP9Q16HKV_0Ijs',
-      });
-
-    //   process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY
-    
-
-
+    const [contentPage, setContentPage] = useState('label');
     const [clicked, setClick] = useState(false);
     const svgRef = useRef();
+
+
     useEffect(() => {
         console.log(clicked)
     const height = window.innerHeight
@@ -208,7 +190,7 @@ export default function Cluster() {
             //.attr("id", (d,i) => {return i})
             //.attr("fill", d => {console.log(color(d.data.group)); return d.data.group})
             .call(drag(simulation))
-            .on("click", (e,d,i) => {setClick((prev) => !prev); setNodePage(d.data.id);});
+            .on("click", (e,d,i) => {setClick((prev) => !prev); setNodePage(d.data.id); setContentPage('label')});
       
         node.transition()
             .delay((d, i) => Math.random() * 500)
@@ -243,7 +225,6 @@ export default function Cluster() {
         </Head>
         <div className={styles.main_viz}>
 
-{/*RECONVERT TO CORRECT DIV CHOICES*/}
         <div className={clicked ? 'viz_div half' : 'viz_div'} id="viz_id" >
         <style jsx>{`
         viz_div {
@@ -270,25 +251,14 @@ export default function Cluster() {
             visibility: hidden;
         }
       `}</style>
-      <h1> HELLO {nodePage}</h1>
-      {console.log(nodePage)}
-{/**/}
-{/*mapTypeId={google.maps.MapTypeId.ROADMAP}*/}
-      <PageWithJSbasedForm/>
-        {!isLoaded ?  <div>Loading...</div> :
-        <GoogleMap
-        zoom={14}
-        center={mapCenter}
-        mapTypeId={"satellite"}
-        mapContainerStyle={{ width: '800px', height: '800px' }}
-        onLoad={() => console.log('Map Component Loaded...')}
-        onClick={ handleClickedMap}
-        >
-            {console.log(markerPosition)}
-            {isMarkerShown && <Marker position={markerPosition} />}
-        
-        </GoogleMap>
-}
+
+
+      <Header pgcontent='label'/>
+      {console.log(contentPage)}
+      {(contentPage == 'label') ? <LabelPage /> : (contentPage == 'comment') ? <CommentPage /> : (contentPage == 'map') ? <MapPage /> : (contentPage == 'label') ? <RatePage /> : <RatePage />}
+      <Footer pgcontent='label'/>
+      
+
 
         </div>
 
