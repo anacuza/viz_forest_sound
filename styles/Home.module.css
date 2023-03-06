@@ -353,3 +353,18 @@
     display: none;
     visibility: hidden;
   }
+
+  .form_header {
+    height: 10%
+  }
+
+  .form_content {
+    height:75%
+  }
+
+  .form_footer {
+    height:15%;
+    display: flex;
+    flex-direction: column;
+  }
+

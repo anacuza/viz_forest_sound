@@ -15,6 +15,7 @@ import CommentPage from '../components/CommentPage'
 import MapPage from '../components/MapPage'
 import RatePage from '../components/RatePage'
 import Footer from '@/components/footer';
+import { style } from 'd3';
 /*import MapContainer from './MapContainer'; */
 
 
@@ -227,11 +228,12 @@ export default function Cluster() {
 
         <div className={clicked ? 'viz_div half' : 'viz_div'} id="viz_id" >
         <style jsx>{`
-        viz_div {
+        .viz_div {
           width:100%;
         }
         .viz_div.half {
             width:50%;
+            position: sticky;
         }
       `}</style>
 
@@ -242,7 +244,8 @@ export default function Cluster() {
         <div className={clicked ? 'form_div' : 'form_div hidden'}>
         <style jsx>{`
         .form_div {
-          display: block;
+          display: flex;
+          flex-direction:column;
           visibility: visible;
           width:50%;
         }
@@ -252,11 +255,16 @@ export default function Cluster() {
         }
       `}</style>
 
-
+      <div className={styles.form_header}>
       <Header pgcontent='label'/>
+      </div>
+      <div className={styles.form_content}>
       {console.log(contentPage)}
       {(contentPage == 'label') ? <LabelPage /> : (contentPage == 'comment') ? <CommentPage /> : (contentPage == 'map') ? <MapPage /> : (contentPage == 'label') ? <RatePage /> : <RatePage />}
+      </div>
+      <div className={styles.form_footer}>
       <Footer pgcontent='label'/>
+      </div>
       
 
 
