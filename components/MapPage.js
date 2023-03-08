@@ -18,7 +18,7 @@ export default function MapPage() {
      }
 
     const mapCenter = useMemo(
-        () => ({ lat: 27.672932021393862, lng: 85.31184012689732 }),
+        () => ({ lat: 7.9465, lng: 1.0232 }),
         []
       );
     
@@ -30,14 +30,13 @@ export default function MapPage() {
 
     return(
         <>
-        <div className={styles.content_container}></div>
-              <PageWithJSbasedForm/>
+        <div className={styles.content_container}>
         {!isLoaded ?  <div>Loading...</div> :
         <GoogleMap
         zoom={14}
         center={mapCenter}
         mapTypeId={"satellite"}
-        mapContainerStyle={{ width: '800px', height: '800px' }}
+        mapContainerStyle={{ width: '50vw', height: '80vh', rightMargin:'10px' }}
         onLoad={() => console.log('Map Component Loaded...')}
         onClick={ handleClickedMap}
         >
@@ -46,7 +45,7 @@ export default function MapPage() {
         
         </GoogleMap>
         }   
-        <div/>
+        </div>
         </>
     )
 }

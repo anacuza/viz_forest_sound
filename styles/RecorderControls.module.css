@@ -1,0 +1,81 @@
+.controlsContainer {
+    height: 15%;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0.5rem;
+  }
+  
+  .recorderDisplay {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+  }
+  
+  @keyframes animated-block {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .recordingIndicator {
+    width: 10px;
+    height: 10px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    background-color: #099fff;
+    animation-name: animated-block;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+  
+  .recordingTime {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cancelButtonContainer {
+    width: 20%;
+    display: grid;
+    place-content: center;
+    animation-name: animated-block;
+    animation-duration: 2s;
+  }
+  
+  .startButton,
+  .cancelButton {
+    border: none;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  
+  .cancelButton:hover {
+    color: #fd1c03;
+  }
+  
+  .cancelButton {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .startButtonContainer {
+    width: 15%;
+    display: grid;
+    place-content: center;
+  }
+  
+  .startButton:hover {
+    color: #41295a;
+    background-color: #f2ea02;
+  }
+  
+  .startButton {
+    width: 40px;
+    height: 40px;
+  }

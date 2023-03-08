@@ -11,7 +11,7 @@ import { useRef } from "react";
 
 import Header from '../components/header'
 import LabelPage from '../components/LabelPage'
-import CommentPage from '../components/CommentPage'
+import Recorder from '../components/Recorder'
 import MapPage from '../components/MapPage'
 import RatePage from '../components/RatePage'
 import Footer from '@/components/footer';
@@ -27,7 +27,9 @@ export default function Cluster() {
     const [clicked, setClick] = useState(false);
     const svgRef = useRef();
 
+    const contentChange = () => {console.log('hi'); contentPage=='label' ? setContentPage('recorder') : contentPage=='recorder' ? setContentPage('rate') : contentPage=='rate' ? setContentPage('map') : setContentPage('rate')}
 
+    
     useEffect(() => {
         console.log(clicked)
     const height = window.innerHeight
@@ -35,8 +37,9 @@ export default function Cluster() {
     const n = 200 // number of nodes
     const m = 10 // number of groups
     const color = d3.scaleOrdinal(d3.range(m), d3.schemeCategory10)
-      
-
+     
+    
+    
    let pack = () => d3.pack()
     .size([width, height])
     .padding(1)
@@ -256,14 +259,14 @@ export default function Cluster() {
       `}</style>
 
       <div className={styles.form_header}>
-      <Header pgcontent='label'/>
+      <Header pgcontent={contentPage}/>
       </div>
       <div className={styles.form_content}>
       {console.log(contentPage)}
-      {(contentPage == 'label') ? <LabelPage /> : (contentPage == 'comment') ? <CommentPage /> : (contentPage == 'map') ? <MapPage /> : (contentPage == 'label') ? <RatePage /> : <RatePage />}
+      {(contentPage == 'label') ? <LabelPage /> : (contentPage == 'recorder') ? <Recorder /> : (contentPage == 'map') ? <MapPage /> : (contentPage == 'rate') ? <RatePage /> : <RatePage />}
       </div>
       <div className={styles.form_footer}>
-      <Footer pgcontent='label'/>
+      <Footer pgcontent={contentPage} changeContent={contentChange}/>
       </div>
       
 

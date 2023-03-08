@@ -5,7 +5,7 @@ import styles from '@/styles/Footer.module.css'
 import { useState, useEffect, useRef } from "react";
 
 
-export default function Footer({pgcontent}) {
+export default function Footer({pgcontent, changeContent}) {
 
     const [isActive, setIsActive] = useState(1);
     const ref = useRef(null);
@@ -15,6 +15,10 @@ export default function Footer({pgcontent}) {
         setIsActive(2)
             setTimeout(() => {
                 setIsActive(3)
+            }, 700); //miliseconds
+            setTimeout(() => {
+                changeContent();
+                setIsActive(1)
             }, 1250); //miliseconds
         
         };
