@@ -194,7 +194,7 @@ export default function Cluster() {
             //.attr("id", (d,i) => {return i})
             //.attr("fill", d => {console.log(color(d.data.group)); return d.data.group})
             .call(drag(simulation))
-            .on("click", (e,d,i) => {setClick((prev) => !prev); setNodePage(d.data.id); setContentPage('label')});
+            .on("click", (e,d,i) => {setClick((prev) => !prev); setNodePage(d.data.id); setContentPage('rate')});
       
         node.transition()
             .delay((d, i) => Math.random() * 500)
