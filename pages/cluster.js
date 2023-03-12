@@ -35,8 +35,8 @@ export default function Cluster() {
     const height = window.innerHeight
     const width = clicked ? (window.innerWidth / 2) : window.innerWidth
     const n = 200 // number of nodes
-    const m = 10 // number of groups
-    const color = d3.scaleOrdinal(d3.range(m), d3.schemeCategory10)
+    const m = 5 // number of groups
+    const color = d3.scaleOrdinal(d3.range(m), ['#6A0136', '#646F4B', '#FFE0B5', '#8D94BA', '#FF4D80'])
      
     
     
@@ -59,6 +59,7 @@ export default function Cluster() {
           ([, children]) => ({children})
         )
       })
+
 
       let drag = simulation => {
   
@@ -190,11 +191,12 @@ export default function Cluster() {
           .join("circle")
             .attr("cx", d => {return d.x})
             .attr("cy", d => {return d.y})
+            .attr("fill", d => color(d.data.group))
             .attr("id", guid()) 
             //.attr("id", (d,i) => {return i})
             //.attr("fill", d => {console.log(color(d.data.group)); return d.data.group})
             .call(drag(simulation))
-            .on("click", (e,d,i) => {setClick((prev) => !prev); setNodePage(d.data.id); setContentPage('rate')});
+            .on("click", (e,d,i) => {console.log(d.data.group); setClick((prev) => !prev); setNodePage(d.data.id); setContentPage('label')});
       
         node.transition()
             .delay((d, i) => Math.random() * 500)
@@ -251,6 +253,14 @@ export default function Cluster() {
           flex-direction:column;
           visibility: visible;
           width:50%;
+          background-color:#601038;
+          border-radius: 30px 30px 30px 30px;
+          margin-top:0.5%;
+          margin-right:0.5%;
+          margin-bottom:0.5%;
+          margin-left:0.5%;
+          box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset, rgba(0, 0, 0, 0.2) -3px 0px 0px inset;;
+          /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
         }
         .form_div.hidden {
             display: none;

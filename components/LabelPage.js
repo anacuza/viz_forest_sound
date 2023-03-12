@@ -17,13 +17,12 @@ function ImageSelection({animal}) {
                     boxShadow="base"
                     rounded="20px"
                     overflow="hidden"
-                    bg="white"
+                    bg=""
                     lineHeight="0"
                     //_hover={{ boxShadow: "dark-lg" }}
-                    _hover={{ boxShadow: "dark-lg"}}
+                    _hover={{ boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"}}
                     style={{
-                        border: isActive ? '2px solid black' : 'none',
-                        color: isActive ? 'white' : '',
+                        border: isActive ? '3px solid black' : 'none',
                       }}
                       onClick={handleClick}
                     >

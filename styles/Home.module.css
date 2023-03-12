@@ -342,7 +342,7 @@
 .main_viz{
   display: flex;
   flex-direction: row;
-  background-color:#FCFFFD;
+  background-color:#F5F3EA;
 }
 
   .viz_div {
@@ -352,6 +352,7 @@
   .form_div {
     display: none;
     visibility: hidden;
+    
   }
 
   .form_header {
