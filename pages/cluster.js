@@ -21,7 +21,20 @@ import { style } from 'd3';
 
 export default function Cluster() {
 
-    
+  var d = {
+    "type":"Feature",
+    "id":"7525",
+    "geometry": {
+        "type":"Polygon",
+        "coordinates":[[[-1.4355316925894648,6.384599812210478],[-1.4272919464957146,6.383235036740804],[-1.4272919464957146,6.377775898501816],[-1.434501724327746,6.36822226671342],[-1.4382782746207146,6.368563470911745],[-1.4365616608511833,6.360374507586212],[-1.4448014069449333,6.348432035586801],[-1.4430847931754018,6.342972527543295],[-1.4468613434683708,6.340242751832978],[-1.4499512482535273,6.33751296167176],[-1.4619675446402456,6.324546261249057],[-1.467804031456652,6.321475152958798],[-1.4825669098746208,6.306801828464037],[-1.4811936188589958,6.288033017483279],[-1.4860001374136833,6.287691760097465],[-1.4894333649527458,6.283255393706438],[-1.4887467194449333,6.278818989493459],[-1.4863434601675898,6.278818989493459],[-1.481536941612902,6.271311142428926],[-1.4671173859488398,6.275747610588404],[-1.4643708039175898,6.279501515679263],[-1.466430740441027,6.288033017483279],[-1.4671173859488396,6.290080557094446],[-1.460937576378527,6.2904218129122595],[-1.457161026085558,6.294175612118165],[-1.453727798546496,6.2975881333121935],[-1.4506378937613396,6.300659383209462],[-1.4478913117300898,6.301683129136299],[-1.444458084191027,6.302706873043142],[-1.4396515656363396,6.304071861776132],[-1.4338150788199333,6.305095600968386],[-1.423858718956652,6.316697837152226],[-1.4248886872183708,6.321475152958798],[-1.426948623741808,6.3242050278953865],[-1.4327851105582146,6.328982274344833],[-1.432441787804308,6.33375947661573],[-1.416992263878527,6.342290084970831],[-1.4200821686636833,6.3474083822357725],[-1.4156189728629023,6.360715716997342],[-1.3974228669058708,6.359009667676808],[-1.3905564551432172,6.362080581944276],[-1.3843766022574333,6.365833830976114],[-1.3967362213980583,6.378117096345586],[-1.4097824860464958,6.375387507237037],[-1.4073792267691518,6.396541442319889],[-1.3740769196402458,6.397223812760771],[-1.3517609406363396,6.416670986927641],[-1.3562241364371208,6.424859048840684],[-1.3613739777457146,6.422812045708916],[-1.3665238190543083,6.429976520635021],[-1.3720169831168083,6.428611866524818],[-1.3730469513785273,6.43372930054843],[-1.3785401154410273,6.430317683590245],[-1.382659988487902,6.4330469789889575],[-1.4077225495230583,6.420765034344436],[-1.4097824860464958,6.424176715378329],[-1.414245681847277,6.422812045708916],[-1.422142105187121,6.430658846316546],[-1.447204666222277,6.424517882223879],[-1.4355316925894648,6.384599812210478]]]
+    }
+  };
+
+console.log('geo area', d3.geoArea(d)/ 12.56637 * 510072000);
+
+
+
+
     const [nodePage, setNodePage] = useState(null);
     const [contentPage, setContentPage] = useState('label');
     const [clicked, setClick] = useState(false);
@@ -34,8 +47,8 @@ export default function Cluster() {
         console.log(clicked)
     const height = window.innerHeight
     const width = clicked ? (window.innerWidth / 2) : window.innerWidth
-    const n = 200 // number of nodes
-    const m = 5 // number of groups
+    const n = 700 // number of nodes
+    const m = 8 // number of groups
     const color = d3.scaleOrdinal(d3.range(m), ['#6A0136', '#646F4B', '#FFE0B5', '#8D94BA', '#FF4D80'])
      
     
@@ -185,6 +198,55 @@ export default function Cluster() {
 
         svg.attr('width', width).attr('height', height);
 
+
+
+        var tooltip = d3.select(svgRef.current)
+            .append("div")
+            .style("opacity", 0)
+            .attr("class", "tooltip")
+            .style("font-size", "16px")
+            .style("position", "absolute")
+            .attr("class", "tooltip")
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "2px")
+            .style("border-radius", "5px")
+            .style("padding", "5px")
+
+        // A function that change this tooltip when the user hover a point.
+        // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+        var mouseover = function (d) {
+            tooltip
+            .transition()
+            .duration(200)
+            .style("opacity", 1)
+            d3.select(this)
+            .style("stroke", "black")
+            .style("opacity", 1)
+        }
+
+        var mousemove = function (d) {
+            tooltip
+            .html("File: " + d.filename)
+            .style("left", (d3.pointer(this)[0]-20) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("top", (d3.pointer(this)[1]) + "px")
+        }
+
+        // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+        var mouseleave = function (d) {
+            tooltip
+            .transition()
+            .duration(200)
+            .style("opacity", 0)
+            d3.select(this)
+                .style("stroke", "none")
+                .style("opacity", 0.8)
+        }
+
+
+
+
+        var currentAudio = null;
         let node = svg.append("g")
           .selectAll("circle")
           .data(nodes)
@@ -196,7 +258,51 @@ export default function Cluster() {
             //.attr("id", (d,i) => {return i})
             //.attr("fill", d => {console.log(color(d.data.group)); return d.data.group})
             .call(drag(simulation))
-            .on("click", (e,d,i) => {console.log(d.data.group); setClick((prev) => !prev); setNodePage(d.data.id); setContentPage('label')});
+            .on("click", (e,d,i) => {})
+            .on('click', function (e,d,i) {
+
+              console.log(d.data.group); setClick((prev) => !prev); setNodePage(d.data.id); setContentPage('label')
+
+
+              console.log("audio_test");
+              //let circle_unique_identifier = d.filename; //assuming that's in your dataset after looking at you csv
+              window.AudioContext = window.AudioContext || window.webkitAudioContext;
+              const audioCtx = new AudioContext();
+              // get the audio element
+              if (currentAudio != null && !currentAudio.paused && currentAudio != this) {
+              currentAudio.pause();
+              //Here we reset the audio and put it back to 0.
+              currentAudio.currentTime = 0;
+              }
+              let audioElement = new Audio('bicycle_bell.wav');
+              /*if(audioElement.paused){ 
+                  audioElement.play();}else{
+                  console.log("audio_pause");
+                  audioElement.currentTime = 0;
+                  audioElement.pause();
+                  audioElement.currentTime = 0;
+                  }*/
+                  if (audioElement.paused) {
+                  audioElement.play();
+                  currentAudio = audioElement;
+              } else {
+                  audio.pause();
+              }
+              
+              /*if (audioElement.paused) {
+                  audioElement.play();
+              } else {
+                  audioElement.pause();
+                  audioElement.currentTime = 0
+              }*/
+          })
+            //.on('mouseover', function (d, i) {
+              //console.log("audio_test", d.filename, i);
+          //})
+          .on('mouseover', mouseover)
+          .on('mousemove', mousemove)
+          .on('mouseleave', mouseleave)
+;
       
         node.transition()
             .delay((d, i) => Math.random() * 500)
@@ -213,6 +319,7 @@ export default function Cluster() {
         });
 
 
+            
         
 
     }, [clicked]);
