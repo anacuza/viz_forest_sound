@@ -5,10 +5,23 @@ import { useState } from "react";
 import { active } from 'd3';
 
 //TO DO create state that saves all animals selected
-function ImageSelection({animal}) {
+function ImageSelection({animal, label_list}) {
     const [isActive, setIsActive] = useState(false);
     const handleClick = () => {
         setIsActive(current => !current)
+        if(isActive) 
+        {
+            var index = label_list.indexOf(animal);
+            if (index !== -1) {
+                label_list.splice(index, 1);
+            } 
+        }
+        else 
+        {
+            label_list.push(animal)
+        }
+        console.log(label_list)
+
     }
 
     return(
@@ -22,7 +35,7 @@ function ImageSelection({animal}) {
                     //_hover={{ boxShadow: "dark-lg" }}
                     _hover={{ boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px"}}
                     style={{
-                        border: isActive ? '3px solid black' : 'none',
+                        border: isActive ? '2px solid black' : 'none',
                       }}
                       onClick={handleClick}
                     >
@@ -40,6 +53,7 @@ export default function LabelPage() {
 //     // 👇️ toggle
 //     setSelectedOptions(...selectedOptions, e.target.key);
 //   }
+    const label_list = []
 
     return(
         <>
@@ -55,10 +69,10 @@ export default function LabelPage() {
             >
                 Image Gallery
             </Text> */}
-            <Wrap px="1rem" spacing={4} justify="center" maxH="75%">
+            <Wrap px="0.5rem" spacing={4} justify="center" maxH="75%">
             {
             animals_ls.map((animal, index) => (
-                <ImageSelection animal={animal} key={animal} />
+                <ImageSelection animal={animal} label_list={label_list} key={animal} />
             ))
             }
             </Wrap>
