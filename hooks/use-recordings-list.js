@@ -14,6 +14,6 @@ export default function useRecordingsList(audio) {
 
   return {
     recordings,
-    deleteAudio: (audioKey) => deleteAudio(audioKey, setRecordings),
+    deleteAudio: (audioKey) => deleteAudio(audioKey, setRecordings, setRecorderState),
   };
 }

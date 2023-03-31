@@ -48,7 +48,9 @@ export default function Footer({pgcontent, changeContent}) {
 
 return(<>
 <div className={styles.footer_container}>
-<button className={isActive==1 ? `${styles.buttonSubmit}` : isActive==2 ? `${styles.buttonSubmit} ${styles.onclic}` : ` ${styles.validate}`} onClick={handleClick} ref={ref}></button>
+<button className={isActive==1 ? `${styles.buttonSubmit}` : isActive==2 ? `${styles.buttonSubmit} ${styles.onclic}` : ` ${styles.validate}`} onClick={handleClick} ref={ref}>
+<i className={styles.arrow}></i>
+</button>
 
 </div></>)
 }

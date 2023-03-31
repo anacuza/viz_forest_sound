@@ -4,9 +4,10 @@ import RecordingsList from "./recordings-list";
 import useRecorder from "./../hooks/useRecorder";
 
 
-export default function CommentPage() {
+export default function Recorder({setRecorderList, recorderList}) {
     const { recorderState, ...handlers } = useRecorder();
     const { audio } = recorderState;
+
     return(
         <>
         <div className={styles.content_container}>
@@ -14,7 +15,7 @@ export default function CommentPage() {
       <h1 className="title">Voice Recorder</h1>
       <div className="recorder-container">
         <RecorderControls recorderState={recorderState} handlers={handlers} />
-        <RecordingsList audio={audio} />
+        <RecordingsList audio={audio} setRecorderList={setRecorderList} recorderList={recorderList}/>
       </div>
     </section>
         </div>

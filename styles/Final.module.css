@@ -1,0 +1,22 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.subcontainer {
+    height:25%;
+    color: #D6F087;
+}
+
+.record {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0.5rem;
+  }
+  
+  .record audio {
+    min-width: 80%;
+    max-width: 60%;
+  }

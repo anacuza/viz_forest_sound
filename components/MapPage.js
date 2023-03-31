@@ -7,7 +7,7 @@ import ImageMapper from 'react-img-mapper';
 import React from 'react';
 import Mapper from './Mapper';
 
-export default function MapPage() {
+export default function MapPage({setMappingList}) {
 
     // const [isMarkerShown, setMarkerShown] = useState(false);
     // const [markerPosition, setMarkerPosition] = useState(null);
@@ -65,7 +65,7 @@ export default function MapPage() {
         <>
         <div className={styles.content_container}>
 
-        <Mapper  />
+        <Mapper  setMappingList={setMappingList}/>
 
 {/*<img src="map.png" useMap="imageMap" width='75%' className={styles.imageMap} onClick={handleImageMap}/>
  

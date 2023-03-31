@@ -10,9 +10,9 @@
   text-align: center;
   width: 130px;
   border-radius:40px;
-  background: #fff;
-  border: 2px solid #1ECD97;
-  color:#1ECD97;
+  background: #791E4B;
+  border: 2px solid #B76D92;
+  color:white;
   letter-spacing:1px;
   text-shadow:0;
   font-size:12px;
@@ -21,14 +21,14 @@
   transition: all 0.25s ease;
 }
   .buttonSubmit:hover {
-    color:white;
-    background: #1ECD97;
+    color:#791E4B;
+    background: white;
   }
   .buttonSubmit:active {
     letter-spacing: 2px ;
   }
   .buttonSubmit:after {
-    content:"SUBMIT";
+    /* content:url('Vector.svg'); */
   }
 
 .onclic {
@@ -41,11 +41,11 @@
 }
 
 .onclic:after {
-    content:"";
+    /* content:url('/tick-all.svg') */
   }
   .onclic:hover {
     color:#1ECD97;
-    background: white;
+    background: #791E4B;
   }
 
 
@@ -81,3 +81,12 @@
     transform: rotate(360deg);
   }
 }
+
+.arrow {
+    border: solid black;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 6px;
+    transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  } 

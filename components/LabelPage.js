@@ -5,22 +5,33 @@ import { useState } from "react";
 import { active } from 'd3';
 
 //TO DO create state that saves all animals selected
-function ImageSelection({animal, label_list}) {
+function ImageSelection({animal, label_list, setLabelList, labelList}) {
     const [isActive, setIsActive] = useState(false);
     const handleClick = () => {
         setIsActive(current => !current)
         if(isActive) 
         {
-            var index = label_list.indexOf(animal);
-            if (index !== -1) {
-                label_list.splice(index, 1);
-            } 
+            // var index = label_list.indexOf(animal);
+            // if (index !== -1) {
+            //     label_list.splice(index, 1);
+            // } 
+            setLabelList(
+                labelList.filter(a =>
+                  a !== animal
+                )
+            )
+
         }
         else 
         {
-            label_list.push(animal)
+            // label_list.push(animal)
+            setLabelList([
+                ...labelList,
+                animal
+            ])
         }
         console.log(label_list)
+        
 
     }
 
@@ -45,7 +56,7 @@ function ImageSelection({animal, label_list}) {
 
 }
 
-export default function LabelPage() {
+export default function LabelPage({setLabelList, labelList}) {
     const animals_ls = ['aardvark', 'beeeater', 'bluebelly', 'coucal', 'dove', 'hartebeest', 'hornbill', 'jacana', 'lapwing', 'mongoose', 'roller', 'turaco']
 //     const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -53,7 +64,9 @@ export default function LabelPage() {
 //     // 👇️ toggle
 //     setSelectedOptions(...selectedOptions, e.target.key);
 //   }
-    const label_list = []
+    const label_list = labelList
+    console.log(label_list)
+
 
     return(
         <>
@@ -72,7 +85,7 @@ export default function LabelPage() {
             <Wrap px="0.5rem" spacing={4} justify="center" maxH="75%">
             {
             animals_ls.map((animal, index) => (
-                <ImageSelection animal={animal} label_list={label_list} key={animal} />
+                <ImageSelection animal={animal} label_list={label_list} setLabelList={setLabelList} labelList={labelList} key={animal} />
             ))
             }
             </Wrap>

@@ -14,6 +14,7 @@ import LabelPage from '../components/LabelPage'
 import Recorder from '../components/Recorder'
 import MapPage from '../components/MapPage'
 import RatePage from '../components/RatePage'
+import FinalPage from '../components/FinalPage'
 import Footer from '@/components/footer';
 import { style } from 'd3';
 /*import MapContainer from './MapContainer'; */
@@ -33,15 +34,19 @@ export default function Cluster() {
 console.log('geo area', d3.geoArea(d)/ 12.56637 * 510072000);
 
 
-
+    const label_list = ['hello']
 
     const [nodePage, setNodePage] = useState(null);
     const [contentPage, setContentPage] = useState('label');
     const [clicked, setClick] = useState(false);
+    const [labelList, setLabelList] = useState([])
+    const [recorderList, setRecorderList] = useState([])
+    const [ratingList, setRatingList] = useState([])
+    const [mappingList, setMappingList] = useState([])
     const svgRef = useRef();
 
-    const contentChange = () => {console.log('hi'); contentPage=='label' ? setContentPage('recorder') : contentPage=='recorder' ? setContentPage('rate') : contentPage=='rate' ? setContentPage('map') : setContentPage('rate')}
-
+    const contentChange = () => {console.log('hi'); contentPage=='label' ? setContentPage('recorder') : contentPage=='recorder' ? setContentPage('rate') : contentPage=='rate' ? setContentPage('map') : setContentPage('final')}
+    const labelUpdate = (newLabelList) => {contentPage=='recorder' ? setLabelList(newLabelList) : ''}
     
     useEffect(() => {
         console.log(clicked)
@@ -380,7 +385,7 @@ console.log('geo area', d3.geoArea(d)/ 12.56637 * 510072000);
       </div>
       <div className={styles.form_content}>
       {console.log(contentPage)}
-      {(contentPage == 'label') ? <LabelPage /> : (contentPage == 'recorder') ? <Recorder /> : (contentPage == 'map') ? <MapPage /> : (contentPage == 'rate') ? <RatePage /> : <RatePage />}
+      {(contentPage == 'label') ? <LabelPage setLabelList={setLabelList} labelList={labelList} /> : (contentPage == 'recorder') ? <Recorder  setRecorderList={setRecorderList} recorderList={recorderList}/> : (contentPage == 'map') ? <MapPage setMappingList={setMappingList}/> : (contentPage == 'rate') ? <RatePage setRatingList={setRatingList}/> : <FinalPage  labelList={labelList} recorderList={recorderList} ratingList={ratingList} mappingList={mappingList}/>}
       </div>
       <div className={styles.form_footer}>
       <Footer pgcontent={contentPage} changeContent={contentChange}/>
